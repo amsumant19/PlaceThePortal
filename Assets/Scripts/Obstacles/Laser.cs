@@ -17,6 +17,16 @@ public class Laser : MonoBehaviour, IResetable
         ignoreLayer = ~(1 << gameObject.layer);
     }
 
+    private void OnEnable()
+    {
+        PlayButtonController.Instance.RegisterResetableObject(this);
+    }
+
+    private void OnDisable()
+    {
+        PlayButtonController.Instance.UnregisterResetableObject(this);
+    }
+
     void Update()
     {
         if (isLaserOn)
@@ -59,8 +69,8 @@ public class Laser : MonoBehaviour, IResetable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // When the ball touches the goal, you win!
-        if (collision.gameObject.name == "Ball")
+        // When the ball touches the laser, you lose!
+        if (collision.gameObject.name == NameConstants.Ball)
         {
             Debug.Log("Restart!");
             Time.timeScale = 0f;
